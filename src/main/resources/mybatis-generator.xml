@@ -10,14 +10,14 @@
         <jdbcConnection driverClass="COM.ibm.db2.jdbc.app.DB2Driver"
                         connectionURL="jdbc:mysql://127.0.0.1:3306/miaosha"
                         userId="root"
-                        password="root">
+                        password="xxw8417018">
         </jdbcConnection>
 
         <javaTypeResolver >
             <property name="forceBigDecimals" value="false" />
         </javaTypeResolver>
 
-        <javaModelGenerator targetPackage="com.miaosha.dataobject" targetProject="src/main/">
+        <javaModelGenerator targetPackage="com.miaosha.dataobject" targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
@@ -26,7 +26,7 @@
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.miaosha.dao"  targetProject="\MBGTestProject\src">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.miaosha.dao"  targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
 
