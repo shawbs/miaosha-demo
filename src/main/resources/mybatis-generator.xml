@@ -7,7 +7,7 @@
     <!--<classPathEntry location="/Program Files/IBM/SQLLIB/java/db2java.zip" />-->
 
     <context id="DB2Tables" targetRuntime="MyBatis3">
-        <jdbcConnection driverClass="COM.ibm.db2.jdbc.app.DB2Driver"
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://127.0.0.1:3306/miaosha"
                         userId="root"
                         password="xxw8417018">
