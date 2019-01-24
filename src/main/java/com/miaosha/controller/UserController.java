@@ -9,6 +9,7 @@ import com.miaosha.error.EmBusinessError;
 import com.miaosha.respone.CommonReturnType;
 import com.miaosha.service.UserService;
 import com.miaosha.service.impl.model.UserModel;
+import com.sun.tools.classfile.ConstantPool;
 import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ import java.util.Random;
 @RequestMapping("/user")
 @CrossOrigin(allowCredentials = "true",allowedHeaders = "*")
 public class UserController extends BaseController{
+
+    private static final String CONTENT_TYPE_FORMED = "application/x-www-form-urlencoded";
 
     @Autowired
     private UserService userService;
@@ -66,12 +69,16 @@ public class UserController extends BaseController{
         return CommonReturnType.create(userVO);
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(value = "/register", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
     public CommonReturnType register(@RequestParam(name = "telphone")String telphone,
                                      @RequestParam(name = "otpcode")String otpcode
                                      ) throws BusinessException {
+        if(StringUtils.isEmpty(telphone) || StringUtils.isEmpty(otpcode))
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+
         String inSessionCode = (String)httpServletRequest.getSession().getAttribute(telphone);
+
         if(!StringUtils.equals(inSessionCode,otpcode)){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"验证码错误");
         }
@@ -83,7 +90,7 @@ public class UserController extends BaseController{
         return CommonReturnType.create(null);
     }
 
-    @RequestMapping(value = "/setUserInfo", method = RequestMethod.POST)
+    @RequestMapping(value = "/setUserInfo", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
     public CommonReturnType setUserInfo (
             @RequestParam(name = "id")Integer id,
@@ -102,7 +109,7 @@ public class UserController extends BaseController{
         return CommonReturnType.create(null);
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
     public CommonReturnType login(@RequestParam(name = "telphone")String telphone,
                                   @RequestParam(name = "otpcode")String otpcode,
@@ -128,7 +135,7 @@ public class UserController extends BaseController{
         }
 
         BeanUtils.copyProperties(userModel,userVO);
-        return CommonReturnType.create(userVO);
+        return CommonReturnType.create(null);
 
     }
 
