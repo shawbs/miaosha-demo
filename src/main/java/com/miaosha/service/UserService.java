@@ -9,4 +9,5 @@ public interface UserService {
     UserModel getUserById(Integer id);
     void register(UserModel userModel) throws BusinessException;
     void setUserinfo(UserModel userModel) throws BusinessException;
+    UserModel getUserByTelphone(String telphone) throws BusinessException;
 }

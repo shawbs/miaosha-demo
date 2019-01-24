@@ -96,4 +96,18 @@ public class UserServiceImpl implements UserService{
         }
         return userModel;
     }
+
+    @Override
+    @Transactional
+    public UserModel getUserByTelphone(String telphone) throws BusinessException {
+        UserDO userDO = userDOMapper.selectByTelphone(telphone);
+        if(userDO == null){
+            throw new BusinessException(EmBusinessError.USER_NOT_EXIST);
+        }
+        UserModel userModel = convertFormDataObject(userDO);
+        UserPasswordDO userPasswordDO = userPasswordDOMapper.selectByUserId(userModel.getId());
+        userModel.setEncrptPassword(userPasswordDO.getEncrptPassword());
+
+        return userModel;
+    }
 }

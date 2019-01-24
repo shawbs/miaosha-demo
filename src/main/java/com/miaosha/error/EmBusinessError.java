@@ -8,7 +8,7 @@ public enum EmBusinessError implements CommonError {
     USER_NOT_EXIST(20001,"用户不存在"),
     ;
 
-    private EmBusinessError(int errorCode, String errorMsg){
+    EmBusinessError(int errorCode, String errorMsg){
         this.errorCode = errorCode;
         this.errorMsg = errorMsg;
     }

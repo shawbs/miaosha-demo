@@ -102,4 +102,34 @@ public class UserController extends BaseController{
         return CommonReturnType.create(null);
     }
 
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonReturnType login(@RequestParam(name = "telphone")String telphone,
+                                  @RequestParam(name = "otpcode")String otpcode,
+                                  @RequestParam(name = "password")String password
+    ) throws BusinessException {
+        if(StringUtils.isEmpty(telphone)){
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"手机号不能为空");
+        }
+        UserVO userVO = new UserVO();
+        UserModel userModel = userService.getUserByTelphone(telphone);
+        if(!StringUtils.isEmpty(otpcode)){
+            String inSessionCode = (String)httpServletRequest.getSession().getAttribute(telphone);
+            if(!StringUtils.equals(inSessionCode,otpcode)){
+                throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"验证码错误");
+            }
+
+        }else if (!StringUtils.isEmpty(password)){
+            if(!StringUtils.equals(password,userModel.getEncrptPassword())){
+                throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"密码错误");
+            }
+        }else{
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+        }
+
+        BeanUtils.copyProperties(userModel,userVO);
+        return CommonReturnType.create(userVO);
+
+    }
+
 }
