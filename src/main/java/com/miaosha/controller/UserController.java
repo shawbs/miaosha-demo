@@ -20,6 +20,7 @@ import sun.security.provider.MD5;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +52,7 @@ public class UserController extends BaseController{
         httpServletRequest.getSession().setAttribute(telphone, otpCode);
         System.out.println("telphone:" + telphone + ", otpCode:" + otpCode);
 
-        Map map = new HashMap();
+        Map<String,Object> map = new HashMap();
         map.put("code", otpCode);
         map.put("telphone", telphone);
         return CommonReturnType.create(map);
@@ -74,8 +75,6 @@ public class UserController extends BaseController{
     public CommonReturnType register(@RequestParam(name = "telphone")String telphone,
                                      @RequestParam(name = "otpcode")String otpcode
                                      ) throws BusinessException {
-        if(StringUtils.isEmpty(telphone) || StringUtils.isEmpty(otpcode))
-            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
 
         String inSessionCode = (String)httpServletRequest.getSession().getAttribute(telphone);
 
@@ -111,13 +110,10 @@ public class UserController extends BaseController{
 
     @RequestMapping(value = "/login", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
-    public CommonReturnType login(@RequestParam(name = "telphone")String telphone,
-                                  @RequestParam(name = "otpcode")String otpcode,
-                                  @RequestParam(name = "password")String password
+    public CommonReturnType login(@RequestParam(name = "telphone") String telphone,
+                                  @RequestParam(name = "otpcode", required = false) String otpcode,
+                                  @RequestParam(name = "password", required = false) String password
     ) throws BusinessException {
-        if(StringUtils.isEmpty(telphone)){
-            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"手机号不能为空");
-        }
         UserVO userVO = new UserVO();
         UserModel userModel = userService.getUserByTelphone(telphone);
         if(!StringUtils.isEmpty(otpcode)){
@@ -135,7 +131,7 @@ public class UserController extends BaseController{
         }
 
         BeanUtils.copyProperties(userModel,userVO);
-        return CommonReturnType.create(null);
+        return CommonReturnType.create(userVO);
 
     }
 

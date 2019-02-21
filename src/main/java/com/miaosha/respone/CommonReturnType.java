@@ -17,6 +17,10 @@ public class CommonReturnType {
         return type;
     }
 
+    public Boolean isSuccess(){
+        return this.getErrorCode() == 0;
+    }
+
     public String getErrorMsg() {
         return errorMsg;
     }
